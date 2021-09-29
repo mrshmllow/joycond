@@ -35,6 +35,11 @@ void virt_ctlr_combined::relay_events(std::shared_ptr<phys_ctlr> phys)
                 libevdev_uinput_write_event(uidev, ev.type, ev.code == BTN_TL ? BTN_2: BTN_3, ev.value);
                 ret = libevdev_next_event(evdev, LIBEVDEV_READ_FLAG_NORMAL, &ev);
                 continue;
+            } else if (phys == physr && ev.type == EV_KEY && (ev.code == BTN_A || ev.code == BTN_B)) {
+                /* Swap A, B buttons */
+                libevdev_uinput_write_event(uidev, ev.type, ev.code == BTN_A ? BTN_B: BTN_A, ev.value);
+                ret = libevdev_next_event(evdev, LIBEVDEV_READ_FLAG_NORMAL, &ev);
+                continue;
             }
             libevdev_uinput_write_event(uidev, ev.type, ev.code, ev.value);
         }
